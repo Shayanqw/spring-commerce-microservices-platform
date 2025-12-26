@@ -1,0 +1,18 @@
+flowchart LR
+  subgraph Client
+    U[User / API Client]
+  end
+
+  U -->|HTTP| GW[API Gateway<br/>Spring Cloud Gateway MVC]
+
+  GW -->|/api/product/**| PS[Product Service]
+  GW -->|/api/order/**| OS[Order Service]
+
+  GW -->|JWT validation| KC[Keycloak (OIDC)]
+
+  PS --> MDB[(MongoDB)]
+  PS --> RDS[(Redis)]
+
+  OS --> PGO[(Postgres: order_service)]
+  OS --> IS[Inventory Service]
+  IS --> PGI[(Postgres: inventory_service)]

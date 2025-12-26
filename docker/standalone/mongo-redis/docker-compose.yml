@@ -1,0 +1,59 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: standalone-mongodb
+    ports:
+      - "27017:27017"
+    restart: no
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=password
+      - MONGO_INITDB_DATABASE=product-service
+    volumes:
+      - ./init/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./db-data:/data/db
+    command: mongod --auth
+    networks:
+      - backend
+
+  mongo-express:
+    image: mongo-express
+    container_name: standalone-mongoexpress
+    ports:
+      - "8081:8081"
+    restart: no
+    environment:
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=admin
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_MONGODB_SERVER=mongodb
+    depends_on:
+      - mongodb
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.4.3
+    container_name: standalone-redis
+    ports:
+      - "6379:6379"
+    restart: no
+    volumes:
+      - ./init/redis.conf:/usr/local/etc/redis/redis.conf
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    networks:
+      - backend
+
+  redisinsight:
+    image: redislabs/redisinsight:1.14.0
+    container_name: standalone-redisinsight
+    ports:
+      - "8001:8001"
+    restart: no
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
