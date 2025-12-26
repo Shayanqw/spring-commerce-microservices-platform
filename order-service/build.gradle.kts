@@ -37,13 +37,15 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
-    implementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
+    testImplementation("org.springframework.cloud:spring-cloud-starter-contract-stub-runner")
     compileOnly("org.projectlombok:lombok")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock")
+
 
     // TestContainers Dependencies
     testImplementation(platform("org.testcontainers:testcontainers-bom:1.21.3"))
